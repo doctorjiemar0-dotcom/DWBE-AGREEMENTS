@@ -18,10 +18,14 @@
 
 <div class="container">
     <h2>Store Partner Agreement</h2>
-    <label for="partnerSelect">Piliin ang iyong pangalan:</label>
-    <select id="partnerSelect" onchange="showAgreement()">
-        <option value="">-- Piliin ang Partner --</option>
-    </select>
+    
+    <!-- Ang label at dropdown ay nakatago na ngayon para sa mga kliyente upang maging indibidwal at eksklusibo ang view -->
+    <div id="selectionWrapper">
+        <label for="partnerSelect">Piliin ang iyong pangalan:</label>
+        <select id="partnerSelect" onchange="showAgreement()">
+            <option value="">-- Piliin ang Partner --</option>
+        </select>
+    </div>
 
     <div class="image-container" id="imageContainer">
         <p style="color: #777;">Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>
@@ -67,6 +71,25 @@
             <img src="${imageName}" alt="Agreement Image" onerror="this.onerror=null; this.src='Store Partner 2.jpg';">
         `;
     }
+
+    // Awtomatikong suriin kung may URL parameter na ipinasa mula sa Client Portal
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const storeParam = urlParams.get('store');
+
+        if (storeParam) {
+            // Hanapin ang index ng partner base sa pangalan mula sa URL
+            const matchedIndex = partnersData.findIndex(p => p.name.toLowerCase() === storeParam.toLowerCase());
+            
+            if (matchedIndex !== -1) {
+                select.value = matchedIndex;
+                showAgreement();
+                
+                // Itago nang lubusan ang selection box para hindi na makita o mapalitan ng kliyente ang ibang kasunduan
+                document.getElementById('selectionWrapper').style.display = 'none';
+            }
+        }
+    });
 </script>
 
 </body>
