@@ -1,0 +1,14 @@
+{
+  "partners": [
+    {"name": "Marites Malijan", "date": "June 26, 2026", "price": 150.00, "notes": "Restock: 5 or 8"},
+    {"name": "Albert Torres Jr.", "date": "June 22, 2026", "price": 140.00, "notes": "Restock: 10"},
+    {"name": "Regina Latoza", "date": "August 16, 2026", "price": 150.00, "notes": "-"},
+    {"name": "Joan Deamor", "date": "August 16, 2026", "price": 150.00, "notes": "-"},
+    {"name": "Francis Japon", "date": "August 16, 2026", "price": 150.00, "notes": "-"},
+    {"name": "Erlinda Fraginal", "date": "July 5, 2026", "price": 150.00, "notes": "-"},
+    {"name": "Don Desunia", "date": "June 22, 2026", "price": 140.00, "notes": "Restock: 5"},
+    {"name": "Store Partner 2", "date": "June 22, 2026", "price": 140.00, "notes": "Restock: 8"},
+    {"name": "Myla Dones", "date": "June 26, 2026", "price": 150.00, "notes": "Restock: 8-10"},
+    {"name": "Ria Quiz", "date": "July 9, 2026", "price": 150.00, "notes": "Sales: 11, Unsold: 4"}
+  ]
+}
