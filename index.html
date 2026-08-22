@@ -55,6 +55,7 @@
     const toggleBtn = document.getElementById('toggleAgreementBtn');
     
     let isOpened = false;
+    let resizeInterval = null;
 
     // Function para awtomatikong ipadala ang sukat ng taas sa Client Portal iframe
     function sendHeightToParent() {
@@ -81,7 +82,7 @@
         imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
     }
 
-    // Tawagin pagka-load para sa paunang sukat ng button lang muna
+    // Tawagin pagka-load para sa paunang sukat
     window.addEventListener('load', sendHeightToParent);
     window.addEventListener('resize', sendHeightToParent);
 
@@ -91,11 +92,22 @@
             imgContainer.style.display = 'block';
             toggleBtn.textContent = "Itago ang Kasunduan";
             recordClientHistory(storeParam);
+            
+            // Sunud-sunod na pagpapadala ng sukat habang nag-a-adjust ang imahe
+            let count = 0;
+            if (resizeInterval) clearInterval(resizeInterval);
+            resizeInterval = setInterval(() => {
+                sendHeightToParent();
+                count++;
+                if (count > 25) clearInterval(resizeInterval);
+            }, 80);
+
         } else {
+            if (resizeInterval) clearInterval(resizeInterval);
             imgContainer.style.display = 'none';
             toggleBtn.textContent = "Buksan ang Kasunduan";
         }
-        // I-update agad ang haba sa portal pagka-click ng button (pagbukas o pagtago)
+        
         setTimeout(sendHeightToParent, 50);
     }
 
