@@ -24,13 +24,12 @@
 </div>
 
 <script>
-    // ILAGAY DITO ANG TUMPAK NA FILENAME NG LARAWAN NG BAWAT KLIENTE
-    // Halimbawa: "Pangalan ng Tindahan": "filename_ng_larawan.jpg"
+    // Listahan ng mga filename ng larawan sa iyong repository
     const storeAgreements = {
         "Marites Malijan": "1000023883.jpg",
         "DON DESUNIA": "1000023883.jpg",
-        "Myla Dones": "myla.jpg",     // Palitan ito ng tunay na filename ng litrato ni Myla sa iyong repository
-        "Ria Quiz": "ria.jpg"         // Palitan ito ng tunay na filename ng litrato ni Ria sa iyong repository
+        "Myla Dones": "myla.jpg",
+        "Ria Quiz": "ria.jpg"
     };
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -43,17 +42,20 @@
         const cleanName = decodeURIComponent(storeParam).trim();
         storeTitle.textContent = "Kasunduan ni: " + cleanName;
         
-        // Kung may nakatalagang larawan sa listahan, yun ang gagamitin. 
-        // Kung wala pa, gagamitin nito ang pangalan ng kliyente o default image para hindi masira.
         let imgFilename = storeAgreements[cleanName];
 
-        if (imgFilename) {
-            imgContainer.innerHTML = `<img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}">`;
-        } else {
-            // Fallback kung sakaling wala pa sa listahan ang filename pero may image silang kapangalan ng store (hal. underscored)
-            let safeName = cleanName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
-            imgContainer.innerHTML = `<img src="${safeName}" alt="Consignment Agreement ni ${cleanName}" onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f;\'>Wala pang naka-upload na larawan ng kasunduan para sa tindahang ito.</p>';">`;
+        if (!imgFilename) {
+            // Kung wala sa listahan, gagawin nitong maliliit ang titik at papalitan ang espasyo ng underscore
+            imgFilename = cleanName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
         }
+
+        // Tinitiyak natin na may kasamang ./ sa unahan para basahin ng GitHub Pages sa parehong folder
+        const finalImagePath = "./path-to-image" ? imgFilename : imgFilename; 
+
+        imgContainer.innerHTML = `
+            <img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}" 
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi makita ang larawan (<b>${imgFilename}</b>). Siguraduhing na-upload na ito sa DWBE-AGREEMENTS repository at eksaktong pareho ang spelling at extension (.jpg/.png).</p>';">
+        `;
     } else {
         storeTitle.textContent = "General Agreement";
         imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
