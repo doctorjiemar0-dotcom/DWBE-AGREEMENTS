@@ -7,8 +7,7 @@
     <style>
         body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 10px; text-align: center; }
         .agreement-card { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
-        h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 2px; }
-        .subtitle { font-size: 0.85rem; font-weight: bold; color: #555; margin-bottom: 8px; }
+        h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 8px; }
         .img-container img { width: 100%; height: auto; border-radius: 4px; border: 1px solid #ddd; }
     </style>
 </head>
@@ -16,7 +15,6 @@
 
 <div class="agreement-card">
     <h1>Consignment Agreement</h1>
-    <div class="subtitle" id="storeTitle">Kasunduan</div>
     
     <div class="img-container" id="agreementImgContainer">
         <!-- Dito lilitaw ang larawan ng kasunduan -->
@@ -27,23 +25,19 @@
     const urlParams = new URLSearchParams(window.location.search);
     const storeParam = urlParams.get('store');
     
-    const storeTitle = document.getElementById('storeTitle');
     const imgContainer = document.getElementById('agreementImgContainer');
 
     if (storeParam) {
         const cleanName = decodeURIComponent(storeParam).trim();
-        storeTitle.textContent = "Kasunduan ni: " + cleanName;
         
-        // Awtomatikong kukunin ang eksaktong pangalan ng store tapos dudugtungan ng .jpg
-        // Halimbawa: "Myla Dones" magiging "Myla Dones.jpg"
-        let imgFilename = cleanName + ".jpg";
+        // Paggamit ng encodeURIComponent para mabasa nang tama ang mga espasyo (spaces) sa pangalan ng file
+        let encodedFilename = encodeURIComponent(cleanName) + ".jpg";
 
         imgContainer.innerHTML = `
-            <img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}" 
-                 onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi makita ang file na <b>${imgFilename}</b>. Siguraduhing tugma ang malaki at maliit na titik.</p>';">
+            <img src="${encodedFilename}" alt="Consignment Agreement ni ${cleanName}" 
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi ma-load ang file: <b>${cleanName}.jpg</b>. Pakitiyak na na-upload ito sa root folder.</p>';">
         `;
     } else {
-        storeTitle.textContent = "General Agreement";
         imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
     }
 </script>
