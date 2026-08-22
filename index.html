@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Partner Agreement Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        select, button { width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; }
+        .image-container { text-align: center; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .error { color: red; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Store Partner Agreement</h2>
+    <label for="partnerSelect">Piliin ang iyong pangalan:</label>
+    <select id="partnerSelect" onchange="showAgreement()">
+        <option value="">-- Piliin ang Partner --</option>
+    </select>
+
+    <div class="image-container" id="imageContainer">
+        <p style="color: #777;">Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>
+    </div>
+</div>
+
+<script>
+    let partnersData = [];
+
+    // Kunin ang partners_list.json mula sa repository
+    fetch('partners_list.json')
+        .then(response => response.json())
+        .then(data => {
+            partnersData = data;
+            const select = document.getElementById('partnerSelect');
+            
+            // Ayusin ang pag-populate ng dropdown base sa JSON data mo
+            data.forEach((partner, index) => {
+                let option = document.createElement('option');
+                option.value = index;
+                // Palitan ang 'name' o 'partner_name' depende sa exact key ng JSON mo
+                option.textContent = partner.name || partner.partner_name || `Partner ${index + 1}`;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading JSON:', error);
+            document.getElementById('imageContainer').innerHTML = '<p class="error">Hindi ma-load ang listahan ng mga kasunduan.</p>';
+        });
+
+    function showAgreement() {
+        const selectIndex = document.getElementById('partnerSelect').value;
+        const container = document.getElementById('imageContainer');
+
+        if (selectIndex === "") {
+            container.innerHTML = '<p style="color: #777;">Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>';
+            return;
+        }
+
+        const selectedPartner = partnersData[selectIndex];
+        // Kunin ang filename ng image mula sa JSON (halimbawa: selectedPartner.filename o katulad na property)
+        // O kaya ay gamitin ang pangalan ng partner kung nakapangalan ang image file ayon sa kanila.
+        const imageName = selectedPartner.filename || selectedPartner.image || (selectedPartner.name + ".jpg");
+
+        container.innerHTML = `
+            <h3>Kasunduan ni: ${selectedPartner.name || 'Partner'}</h3>
+            <img src="${imageName}" alt="Agreement Image" onerror="this.onerror=null; this.src='Store Partner 2.jpg';">
+        `;
+    }
+</script>
+
+</body>
+</html>
