@@ -8,10 +8,10 @@
         body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #2c3e50; }
-        select, button { width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; }
+        select { width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; }
         .image-container { text-align: center; }
         img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .error { color: red; text-align: center; }
+        .info { margin-bottom: 15px; color: #555; }
     </style>
 </head>
 <body>
@@ -29,28 +29,28 @@
 </div>
 
 <script>
-    let partnersData = [];
+    // Direktang inilagay dito ang data para sigurado at walang error sa pag-load
+    const partnersData = [
+        { "name": "Marites Malijan", "date": "June 26, 2026", "price": "150.00", "notes": "Restock: 5 or 8" },
+        { "name": "Albert Torres Jr.", "date": "June 22, 2026", "price": "140.00", "notes": "Restock: 10" },
+        { "name": "Regina Latoza", "date": "August 16, 2026", "price": "150.00", "notes": "-" },
+        { "name": "Joan Deamor", "date": "August 16, 2026", "price": "150.00", "notes": "-" },
+        { "name": "Francis Japon", "date": "August 16, 2026", "price": "150.00", "notes": "-" },
+        { "name": "Erlinda Fraginal", "date": "July 5, 2026", "price": "150.00", "notes": "-" },
+        { "name": "Don Desunia", "date": "June 22, 2026", "price": "140.00", "notes": "Restock: 5" },
+        { "name": "Store Partner 2", "date": "June 22, 2026", "price": "140.00", "notes": "Restock: 8" },
+        { "name": "Myla Dones", "date": "June 26, 2026", "price": "150.00", "notes": "Restock: 8-10" },
+        { "name": "Ria Quiz", "date": "July 9, 2026", "price": "150.00", "notes": "Sales: 11, Unsold: 4" }
+    ];
 
-    // Kunin ang partners_list.json mula sa repository
-    fetch('partners_list.json')
-        .then(response => response.json())
-        .then(data => {
-            partnersData = data;
-            const select = document.getElementById('partnerSelect');
-            
-            // Ayusin ang pag-populate ng dropdown base sa JSON data mo
-            data.forEach((partner, index) => {
-                let option = document.createElement('option');
-                option.value = index;
-                // Palitan ang 'name' o 'partner_name' depende sa exact key ng JSON mo
-                option.textContent = partner.name || partner.partner_name || `Partner ${index + 1}`;
-                select.appendChild(option);
-            });
-        })
-        .catch(error => {
-            console.error('Error loading JSON:', error);
-            document.getElementById('imageContainer').innerHTML = '<p class="error">Hindi ma-load ang listahan ng mga kasunduan.</p>';
-        });
+    // I-populate ang dropdown pagka-load ng pahina
+    const select = document.getElementById('partnerSelect');
+    partnersData.forEach((partner, index) => {
+        let option = document.createElement('option');
+        option.value = index;
+        option.textContent = partner.name;
+        select.appendChild(option);
+    });
 
     function showAgreement() {
         const selectIndex = document.getElementById('partnerSelect').value;
@@ -62,12 +62,15 @@
         }
 
         const selectedPartner = partnersData[selectIndex];
-        // Kunin ang filename ng image mula sa JSON (halimbawa: selectedPartner.filename o katulad na property)
-        // O kaya ay gamitin ang pangalan ng partner kung nakapangalan ang image file ayon sa kanila.
-        const imageName = selectedPartner.filename || selectedPartner.image || (selectedPartner.name + ".jpg");
+        // Ginagawang .jpg file name base sa pangalan ng partner (hal. "Marites Malijan.jpg")
+        const imageName = selectedPartner.name + ".jpg";
 
         container.innerHTML = `
-            <h3>Kasunduan ni: ${selectedPartner.name || 'Partner'}</h3>
+            <h3>Kasunduan ni: ${selectedPartner.name}</h3>
+            <div class="info">
+                <strong>Petsa:</strong> ${selectedPartner.date} | <strong>Presyo:</strong> ₱${selectedPartner.price}<br>
+                <small style="color: #666;">Notes: ${selectedPartner.notes}</small>
+            </div>
             <img src="${imageName}" alt="Agreement Image" onerror="this.onerror=null; this.src='Store Partner 2.jpg';">
         `;
     }
