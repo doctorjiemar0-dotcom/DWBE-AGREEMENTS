@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consignment Agreement</title>
     <style>
-        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 10px; text-align: center; }
-        .agreement-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
-        h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 12px; }
+        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 5px; text-align: center; }
+        .agreement-card { background: white; padding: 10px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 450px; margin: auto; }
+        h1 { font-size: 0.95rem; color: #2e7d32; margin-bottom: 8px; }
         
         .toggle-btn {
             background-color: #2e7d32;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 0.9rem;
+            padding: 8px 15px;
+            font-size: 0.85rem;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             width: 100%;
             transition: background 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .toggle-btn:hover {
             background-color: #1b5e20;
@@ -28,7 +28,7 @@
 
         .img-container {
             display: none;
-            margin-top: 15px;
+            margin-top: 10px;
         }
         .img-container img {
             width: 100%;
@@ -61,17 +61,17 @@
 
     if (storeParam) {
         const cleanName = decodeURIComponent(storeParam).trim();
-        let encodedFilename = encodeURIComponent(cleanName) + ".jpg";
+        const titleCaseName = cleanName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        let encodedFilename = encodeURIComponent(titleCaseName) + ".jpg";
 
-        // Sinusubukan muna ang .jpg, kapag nagka-error, susubukan ang .JPG
         imgContainer.innerHTML = `
             <img src="${encodedFilename}" alt="Consignment Agreement" 
-                 onerror="this.onerror=function(){this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi makita ang larawan para sa <b>${cleanName}</b>. Suriin kung tama ang pangalan sa GitHub repository.</p>';}; this.src='${encodeURIComponent(cleanName)}.JPG';">
+                 onerror="this.onerror=function(){this.parentElement.innerHTML='<p style=\'font-size:0.75rem; color:#d32f2f; padding:8px;\'>Hindi makita ang file para kay <b>${titleCaseName}</b>.</p>';}; this.src='${encodeURIComponent(cleanName)}.jpg';">
         `;
     } else {
         toggleBtn.style.display = 'none';
         imgContainer.style.display = 'block';
-        imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
+        imgContainer.innerHTML = `<p style="font-size: 0.8rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
     }
 
     function toggleAgreement() {
