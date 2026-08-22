@@ -1,14 +1,76 @@
-{
-  "partners": [
-    {"name": "Marites Malijan", "date": "June 26, 2026", "price": 150.00, "notes": "Restock: 5 or 8"},
-    {"name": "Albert Torres Jr.", "date": "June 22, 2026", "price": 140.00, "notes": "Restock: 10"},
-    {"name": "Regina Latoza", "date": "August 16, 2026", "price": 150.00, "notes": "-"},
-    {"name": "Joan Deamor", "date": "August 16, 2026", "price": 150.00, "notes": "-"},
-    {"name": "Francis Japon", "date": "August 16, 2026", "price": 150.00, "notes": "-"},
-    {"name": "Erlinda Fraginal", "date": "July 5, 2026", "price": 150.00, "notes": "-"},
-    {"name": "Don Desunia", "date": "June 22, 2026", "price": 140.00, "notes": "Restock: 5"},
-    {"name": "Store Partner 2", "date": "June 22, 2026", "price": 140.00, "notes": "Restock: 8"},
-    {"name": "Myla Dones", "date": "June 26, 2026", "price": 150.00, "notes": "Restock: 8-10"},
-    {"name": "Ria Quiz", "date": "July 9, 2026", "price": 150.00, "notes": "Sales: 11, Unsold: 4"}
-  ]
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Partner Agreement Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        select, button { width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; }
+        .image-container { text-align: center; }
+        img { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .error { color: red; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Store Partner Agreement</h2>
+    <label for="partnerSelect">Piliin ang iyong pangalan:</label>
+    <select id="partnerSelect" onchange="showAgreement()">
+        <option value="">-- Piliin ang Partner --</option>
+    </select>
+
+    <div class="image-container" id="imageContainer">
+        <p style="color: #777;">Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>
+    </div>
+</div>
+
+<script>
+    let partnersData = [];
+
+    // Kunin ang partners_list.json mula sa repository
+    fetch('partners_list.json')
+        .then(response => response.json())
+        .then(data => {
+            // Sinusuportahan nito ang object na may "partners" o direktang array man yan
+            partnersData = data.partners || data;
+            const select = document.getElementById('partnerSelect');
+            
+            partnersData.forEach((partner, index) => {
+                let option = document.createElement('option');
+                option.value = index;
+                option.textContent = partner.name || `Partner ${index + 1}`;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading JSON:', error);
+            document.getElementById('imageContainer').innerHTML = '<p class="error">Hindi ma-load ang listahan ng mga kasunduan.</p>';
+        });
+
+    function showAgreement() {
+        const selectIndex = document.getElementById('partnerSelect').value;
+        const container = document.getElementById('imageContainer');
+
+        if (selectIndex === "") {
+            container.innerHTML = '<p style="color: #777;">Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>';
+            return;
+        }
+
+        const selectedPartner = partnersData[selectIndex];
+        // Kukunin ang pangalan ng partner at idudugtong ang .jpg para tumugma sa file names mo
+        const imageName = (selectedPartner.name.trim() + ".jpg");
+
+        container.innerHTML = `
+            <h3>Kasunduan ni: ${selectedPartner.name}</h3>
+            <p><strong>Petsa:</strong> ${selectedPartner.date} | <strong>Presyo:</strong> ₱${selectedPartner.price}</p>
+            <img src="${imageName}" alt="Agreement Image" onerror="this.onerror=null; this.src='Store Partner 2.jpg';">
+        `;
+    }
+</script>
+
+</body>
+</html>
