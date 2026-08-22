@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consignment Agreement</title>
     <style>
-        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 15px; text-align: center; }
-        .agreement-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
-        h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 5px; }
-        .subtitle { font-size: 0.9rem; font-weight: bold; color: #555; margin-bottom: 10px; }
+        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 10px; text-align: center; }
+        .agreement-card { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 2px; }
+        .subtitle { font-size: 0.85rem; font-weight: bold; color: #555; margin-bottom: 8px; }
         .img-container img { width: 100%; height: auto; border-radius: 4px; border: 1px solid #ddd; }
     </style>
 </head>
@@ -24,10 +24,13 @@
 </div>
 
 <script>
-    // Dito nakalista ang mga larawan ng kasunduan ng bawat tindahan
+    // ILAGAY DITO ANG TUMPAK NA FILENAME NG LARAWAN NG BAWAT KLIENTE
+    // Halimbawa: "Pangalan ng Tindahan": "filename_ng_larawan.jpg"
     const storeAgreements = {
-        "Marites Malijan": "1000023883.jpg", // Palitan o idagdag ang tamang filename ng larawan dito kung kinakailangan
-        "DON DESUNIA": "1000023883.jpg"    // Halimbawa ng paglalagay ng litrato para sa iba pang kliyente
+        "Marites Malijan": "1000023883.jpg",
+        "DON DESUNIA": "1000023883.jpg",
+        "Myla Dones": "myla.jpg",     // Palitan ito ng tunay na filename ng litrato ni Myla sa iyong repository
+        "Ria Quiz": "ria.jpg"         // Palitan ito ng tunay na filename ng litrato ni Ria sa iyong repository
     };
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,10 +43,17 @@
         const cleanName = decodeURIComponent(storeParam).trim();
         storeTitle.textContent = "Kasunduan ni: " + cleanName;
         
-        // Hanapin ang larawan para sa tindahang ito, o gamitin ang default kung wala pa sa listahan
-        let imgFilename = storeAgreements[cleanName] || "1000023883.jpg"; 
+        // Kung may nakatalagang larawan sa listahan, yun ang gagamitin. 
+        // Kung wala pa, gagamitin nito ang pangalan ng kliyente o default image para hindi masira.
+        let imgFilename = storeAgreements[cleanName];
 
-        imgContainer.innerHTML = `<img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}">`;
+        if (imgFilename) {
+            imgContainer.innerHTML = `<img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}">`;
+        } else {
+            // Fallback kung sakaling wala pa sa listahan ang filename pero may image silang kapangalan ng store (hal. underscored)
+            let safeName = cleanName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
+            imgContainer.innerHTML = `<img src="${safeName}" alt="Consignment Agreement ni ${cleanName}" onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f;\'>Wala pang naka-upload na larawan ng kasunduan para sa tindahang ito.</p>';">`;
+        }
     } else {
         storeTitle.textContent = "General Agreement";
         imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
