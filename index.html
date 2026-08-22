@@ -3,93 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store Partner Agreement</title>
+    <title>Consignment Agreement</title>
     <style>
         body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 15px; line-height: 1.6; }
-        .agreement-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
-        h1 { font-size: 1.2rem; color: #2e7d32; text-align: center; margin-bottom: 15px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
-        select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
-        .agreement-box { background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.85rem; max-height: 300px; overflow-y: auto; margin-top: 15px; }
+        .agreement-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; text-align: center; }
+        h1 { font-size: 1.2rem; color: #2e7d32; margin-bottom: 5px; }
+        .subtitle { font-size: 0.95rem; font-weight: bold; color: #555; margin-bottom: 15px; }
+        .agreement-box { background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.85rem; text-align: left; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="agreement-card">
-    <h1>Store Partner Agreement</h1>
+    <h1>Consignment Agreement</h1>
+    <div class="subtitle" id="storeTitle">Kasunduan</div>
     
-    <!-- Itatago ang dropdown na ito kapag may direktang store parameter mula sa portal -->
-    <div class="form-group" id="selectorContainer">
-        <label for="storeSelect">Piliin ang iyong pangalan:</label>
-        <select id="storeSelect">
-            <option value="">-- Piliin ang Partner --</option>
-        </select>
-    </div>
-
     <div class="agreement-box" id="agreementText">
-        <p>Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>
+        <p>Naglo-load ng kasunduan...</p>
     </div>
 </div>
 
 <script>
-    // Listahan ng mga kasunduan o partners
-    const agreementsData = {
-        "Marites Malijan": `
-            <p><strong>KASUNDUAN SA CONSIGNMENT NG WALIS TAMBO</strong></p>
-            <p>Ang kasunduang ito ay sa pagitan ng Doctor's Whisk Broom at <strong>Marites Malijan</strong>.</p>
-            <p>1. Ang tindahan ay sumasang-ayon na ilagay sa consignment ang mga walis tambo.</p>
-            <p>2. Ang bayaran at takdang koleksyon ay batay sa napagkasunduang sistema ng komisyon kada piraso.</p>
-            <p>3. Ang sirang paninda o hindi inaasahang pangyayari ay pag-uusapan ng dalawang panig.</p>
-        `
-        // Maaari kang magdagdag ng iba pang partner dito kung kinakailangan
-    };
-
-    function loadAgreement(storeName) {
-        const textContainer = document.getElementById('agreementText');
-        const cleanName = decodeURIComponent(storeName).trim();
-        
-        if (agreementsData[cleanName]) {
-            textContainer.innerHTML = agreementsData[cleanName];
-        } else {
-            textContainer.innerHTML = `
-                <p><strong>KASUNDUAN SA CONSIGNMENT NG WALIS TAMBO</strong></p>
-                <p>Ang kasunduang ito ay nagpapatunay ng partnership sa pagitan ng Doctor's Whisk Broom at <strong>${cleanName}</strong>.</p>
-                <p>1. Ang mga walis tambo ay ipinagkakatiwala sa tindahan para sa pagbebenta.</p>
-                <p>2. Ang bawat nabenta ay may katumbas na napagkasunduang porsyento o halaga para sa may-ari ng tindahan.</p>
-                <p>3. Ang kasunduang ito ay sumusuporta sa patas at maayos na takbo ng negosyo.</p>
-            `;
-        }
-    }
-
-    // Basahin kung may ?store=... sa URL galing sa Client Portal
     const urlParams = new URLSearchParams(window.location.search);
     const storeParam = urlParams.get('store');
-
-    const selectorContainer = document.getElementById('selectorContainer');
-    const storeSelect = document.getElementById('storeSelect');
-
-    // Punuin ang dropdown sakaling buksan ito nang nag-iisa
-    for (let store in agreementsData) {
-        let opt = document.createElement('option');
-        opt.value = store;
-        opt.textContent = store;
-        storeSelect.appendChild(opt);
-    }
+    
+    const storeTitle = document.getElementById('storeTitle');
+    const textContainer = document.getElementById('agreementText');
 
     if (storeParam) {
-        // Kung galing sa Client Portal, itago agad ang dropdown at i-load ang kasunduan
-        selectorContainer.style.display = 'none';
-        loadAgreement(storeParam);
+        const cleanName = decodeURIComponent(storeParam).trim();
+        storeTitle.textContent = "Kasunduan ni: " + cleanName;
+        
+        // Dito mo ilalagay o ipapakita ang detalye o larawan ng kasunduan para sa partikular na tindahan
+        textContainer.innerHTML = `
+            <p><strong>Mga Tuntunin at Kundisyon ng Consignment:</strong></p>
+            <p>1. Ang mga walis tambo ay ipinagkakatiwala sa <strong>${cleanName}</strong> para sa pagbebenta.</p>
+            <p>2. Ang takdang remisa at inventory ay susundin ayon sa napagkasunduan.</p>
+            <p>3. Ang anumang usapin sa stock at kita ay direktang iuulat sa admin.</p>
+        `;
     } else {
-        // Kung direktang binuksan ang site ng agreements, hayaang gamitin ang dropdown
-        storeSelect.addEventListener('change', (e) => {
-            if (e.target.value) {
-                loadAgreement(e.target.value);
-            } else {
-                document.getElementById('agreementText').innerHTML = '<p>Mangyaring pumili ng pangalan sa itaas upang makita ang iyong kasunduan.</p>';
-            }
-        });
+        storeTitle.textContent = "General Agreement";
+        textContainer.innerHTML = `<p>Walang nakasaad na pangalan ng tindahan sa link na ito.</p>`;
     }
 </script>
 
