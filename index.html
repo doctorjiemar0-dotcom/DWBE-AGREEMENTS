@@ -24,14 +24,6 @@
 </div>
 
 <script>
-    // Listahan ng mga filename ng larawan sa iyong repository
-    const storeAgreements = {
-        "Marites Malijan": "1000023883.jpg",
-        "DON DESUNIA": "1000023883.jpg",
-        "Myla Dones": "myla.jpg",
-        "Ria Quiz": "ria.jpg"
-    };
-
     const urlParams = new URLSearchParams(window.location.search);
     const storeParam = urlParams.get('store');
     
@@ -42,19 +34,13 @@
         const cleanName = decodeURIComponent(storeParam).trim();
         storeTitle.textContent = "Kasunduan ni: " + cleanName;
         
-        let imgFilename = storeAgreements[cleanName];
-
-        if (!imgFilename) {
-            // Kung wala sa listahan, gagawin nitong maliliit ang titik at papalitan ang espasyo ng underscore
-            imgFilename = cleanName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
-        }
-
-        // Tinitiyak natin na may kasamang ./ sa unahan para basahin ng GitHub Pages sa parehong folder
-        const finalImagePath = "./path-to-image" ? imgFilename : imgFilename; 
+        // Awtomatikong kukunin ang eksaktong pangalan ng store tapos dudugtungan ng .jpg
+        // Halimbawa: "Myla Dones" magiging "Myla Dones.jpg"
+        let imgFilename = cleanName + ".jpg";
 
         imgContainer.innerHTML = `
             <img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}" 
-                 onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi makita ang larawan (<b>${imgFilename}</b>). Siguraduhing na-upload na ito sa DWBE-AGREEMENTS repository at eksaktong pareho ang spelling at extension (.jpg/.png).</p>';">
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi makita ang file na <b>${imgFilename}</b>. Siguraduhing tugma ang malaki at maliit na titik.</p>';">
         `;
     } else {
         storeTitle.textContent = "General Agreement";
