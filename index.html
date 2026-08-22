@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consignment Agreement</title>
     <style>
-        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 15px; line-height: 1.6; }
-        .agreement-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; text-align: center; }
-        h1 { font-size: 1.2rem; color: #2e7d32; margin-bottom: 5px; }
-        .subtitle { font-size: 0.95rem; font-weight: bold; color: #555; margin-bottom: 15px; }
-        .agreement-box { background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.85rem; text-align: left; margin-top: 10px; }
+        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; color: #333; padding: 15px; text-align: center; }
+        .agreement-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 5px; }
+        .subtitle { font-size: 0.9rem; font-weight: bold; color: #555; margin-bottom: 10px; }
+        .img-container img { width: 100%; height: auto; border-radius: 4px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -18,32 +18,35 @@
     <h1>Consignment Agreement</h1>
     <div class="subtitle" id="storeTitle">Kasunduan</div>
     
-    <div class="agreement-box" id="agreementText">
-        <p>Naglo-load ng kasunduan...</p>
+    <div class="img-container" id="agreementImgContainer">
+        <!-- Dito lilitaw ang larawan ng kasunduan -->
     </div>
 </div>
 
 <script>
+    // Dito nakalista ang mga larawan ng kasunduan ng bawat tindahan
+    const storeAgreements = {
+        "Marites Malijan": "1000023883.jpg", // Palitan o idagdag ang tamang filename ng larawan dito kung kinakailangan
+        "DON DESUNIA": "1000023883.jpg"    // Halimbawa ng paglalagay ng litrato para sa iba pang kliyente
+    };
+
     const urlParams = new URLSearchParams(window.location.search);
     const storeParam = urlParams.get('store');
     
     const storeTitle = document.getElementById('storeTitle');
-    const textContainer = document.getElementById('agreementText');
+    const imgContainer = document.getElementById('agreementImgContainer');
 
     if (storeParam) {
         const cleanName = decodeURIComponent(storeParam).trim();
         storeTitle.textContent = "Kasunduan ni: " + cleanName;
         
-        // Dito mo ilalagay o ipapakita ang detalye o larawan ng kasunduan para sa partikular na tindahan
-        textContainer.innerHTML = `
-            <p><strong>Mga Tuntunin at Kundisyon ng Consignment:</strong></p>
-            <p>1. Ang mga walis tambo ay ipinagkakatiwala sa <strong>${cleanName}</strong> para sa pagbebenta.</p>
-            <p>2. Ang takdang remisa at inventory ay susundin ayon sa napagkasunduan.</p>
-            <p>3. Ang anumang usapin sa stock at kita ay direktang iuulat sa admin.</p>
-        `;
+        // Hanapin ang larawan para sa tindahang ito, o gamitin ang default kung wala pa sa listahan
+        let imgFilename = storeAgreements[cleanName] || "1000023883.jpg"; 
+
+        imgContainer.innerHTML = `<img src="${imgFilename}" alt="Consignment Agreement ni ${cleanName}">`;
     } else {
         storeTitle.textContent = "General Agreement";
-        textContainer.innerHTML = `<p>Walang nakasaad na pangalan ng tindahan sa link na ito.</p>`;
+        imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
     }
 </script>
 
