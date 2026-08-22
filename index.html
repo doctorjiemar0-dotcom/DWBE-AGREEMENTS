@@ -9,7 +9,6 @@
         .agreement-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
         h1 { font-size: 1.1rem; color: #2e7d32; margin-bottom: 12px; }
         
-        /* Estilo para sa Toggle Button */
         .toggle-btn {
             background-color: #2e7d32;
             color: white;
@@ -27,7 +26,6 @@
             background-color: #1b5e20;
         }
 
-        /* Container ng larawan na nakatago muna */
         .img-container {
             display: none;
             margin-top: 15px;
@@ -45,11 +43,10 @@
 <div class="agreement-card">
     <h1>Consignment Agreement</h1>
     
-    <!-- Button para buksan o itago ang kasunduan -->
     <button id="toggleAgreementBtn" class="toggle-btn" onclick="toggleAgreement()">Buksan ang Kasunduan</button>
     
     <div class="img-container" id="agreementImgContainer">
-        <!-- Dito lilitaw ang larawan ng kasunduan -->
+        <!-- Dito lilitaw ang larawan -->
     </div>
 </div>
 
@@ -66,9 +63,10 @@
         const cleanName = decodeURIComponent(storeParam).trim();
         let encodedFilename = encodeURIComponent(cleanName) + ".jpg";
 
+        // Sinusubukan muna ang .jpg, kapag nagka-error, susubukan ang .JPG
         imgContainer.innerHTML = `
-            <img src="${encodedFilename}" alt="Consignment Agreement ni ${cleanName}" 
-                 onerror="this.onerror=null; this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi ma-load ang file: <b>${cleanName}.jpg</b>. Pakitiyak na na-upload ito sa root folder.</p>';">
+            <img src="${encodedFilename}" alt="Consignment Agreement" 
+                 onerror="this.onerror=function(){this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:10px;\'>Hindi makita ang larawan para sa <b>${cleanName}</b>. Suriin kung tama ang pangalan sa GitHub repository.</p>';}; this.src='${encodeURIComponent(cleanName)}.JPG';">
         `;
     } else {
         toggleBtn.style.display = 'none';
@@ -81,8 +79,6 @@
         if (isOpened) {
             imgContainer.style.display = 'block';
             toggleBtn.textContent = "Itago ang Kasunduan";
-            
-            // Pumasok ang record sa history ni client kapag binuksan ang kasunduan
             recordClientHistory(storeParam);
         } else {
             imgContainer.style.display = 'none';
@@ -92,23 +88,7 @@
 
     function recordClientHistory(storeName) {
         if (!storeName) return;
-        
-        // Halimbawa ng pagpapadala ng log/history papunta sa cloud database o Google Sheets API kung saan nakakonekta ang portal
-        const historyData = {
-            store: storeName,
-            action: "Tiningnan ang Consignment Agreement",
-            timestamp: new Date().toISOString()
-        };
-
-        // Kung gumagamit ka ng Google Apps Script Web App o Cloud Database endpoint, maaari mong ilagay rito ang fetch request:
-        /*
-        fetch('YOUR_CLOUD_DATABASE_OR_APPS_SCRIPT_URL', {
-            method: 'POST',
-            body: JSON.stringify(historyData)
-        }).catch(err => console.error("Error logging history:", err));
-        */
-        
-        console.ayan && console.log("History recorded for:", storeName);
+        console.log("History recorded for:", storeName);
     }
 </script>
 
