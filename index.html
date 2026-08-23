@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consignment Agreement Viewer</title>
-    <!-- Firebase SDKs para sa Cloud History Recording -->
+    <!-- Firebase SDKs para sa Cloud History at Pagkuha ng Larawan -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -22,20 +22,42 @@
         const db = getFirestore(app);
 
         const urlParams = new URLSearchParams(window.location.search);
-        const imgSrc = urlParams.get('img');
-        const storeName = urlParams.get('store'); // Kunin ang pangalan ng tindahan mula sa URL parameter
+        let imgSrc = urlParams.get('img');
+        const storeName = urlParams.get('store');
 
         const imgContainer = document.getElementById('imgContainer');
         const toggleBtn = document.getElementById('toggleBtn');
         const wrapper = document.getElementById('agreementWrapper');
         let isOpened = false;
-        let hasLogged = false; // Para minsan lang mag-log bawat bukas
+        let hasLogged = false;
 
-        if (imgSrc) {
-            imgContainer.innerHTML = `<img src="${imgSrc}" alt="Signed Agreement" onload="if(isOpened) sendHeight()">`;
-        } else {
-            imgContainer.innerHTML = `<p style="font-size:0.8rem; color:#666; padding:10px;">Walang nakitang larawan ng kasunduan.</p>`;
+        // Subukang kunin ang larawan direkta sa Firestore kung walang 'img' sa URL pero may store name
+        async function fetchAgreementImage() {
+            if (!imgSrc && storeName) {
+                try {
+                    const docRef = doc(db, "app_data", "main_inventory");
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        const appData = docSnap.data();
+                        const store = (appData.consignments || []).find(c => c.storeName.toLowerCase() === storeName.toLowerCase());
+                        if (store && (store.agreementImg || store.img || store.image)) {
+                            imgSrc = store.agreementImg || store.img || store.image;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Error fetching agreement image from cloud:", e);
+                }
+            }
+
+            if (imgSrc) {
+                imgContainer.innerHTML = `<img src="${imgSrc}" alt="Signed Agreement" onload="sendHeight()">`;
+            } else {
+                imgContainer.innerHTML = `<p style="font-size:0.8rem; color:#666; padding:10px;">Walang nakitang larawan ng kasunduan para sa tindahang ito.</p>`;
+            }
+            sendHeight();
         }
+
+        fetchAgreementImage();
 
         function sendHeight() {
             const height = wrapper.offsetHeight;
@@ -51,7 +73,6 @@
                 imgContainer.style.display = 'block';
                 toggleBtn.textContent = "Itago ang Kasunduan";
 
-                // Mag-record sa history ng tindahan sa cloud kapag binuksan ang kasunduan
                 if (storeName && !hasLogged) {
                     hasLogged = true;
                     try {
@@ -68,7 +89,6 @@
                                     text: `Tiningnan ng kliyente ang Pirmadong Consignment Agreement`
                                 });
                                 await setDoc(docRef, appData);
-                                console.log("History recorded successfully.");
                             }
                         }
                     } catch (e) {
@@ -78,7 +98,7 @@
             } else {
                 imgContainer.style.display = 'none';
                 toggleBtn.textContent = "Buksan ang Kasunduan";
-                hasLogged = false; // I-reset para kung buksan ulit ay mag-log uli kung nanaisin
+                hasLogged = false;
             }
             setTimeout(sendHeight, 30);
         }
