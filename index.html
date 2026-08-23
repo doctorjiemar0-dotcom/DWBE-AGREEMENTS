@@ -33,6 +33,8 @@
 
         if (imgSrc) {
             imgContainer.innerHTML = `<img src="${imgSrc}" alt="Signed Agreement" onload="if(isOpened) sendHeight()">`;
+        } else {
+            imgContainer.innerHTML = `<p style="font-size:0.8rem; color:#666; padding:10px;">Walang nakitang larawan ng kasunduan.</p>`;
         }
 
         function sendHeight() {
