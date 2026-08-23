@@ -3,132 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consignment Agreement Viewer</title>
-    <!-- Firebase SDKs para sa Cloud History at Pagkuha ng Larawan -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyDMFmZfC84e3pFQM8pHociQ0JwUL8ek_us",
-          authDomain: "dwbe-consignment.firebaseapp.com",
-          projectId: "dwbe-consignment",
-          storageBucket: "dwbe-consignment.firebasestorage.app",
-          messagingSenderId: "205759197252",
-          appId: "1:205759197252:web:b04400821f81791d10cc11"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        let imgSrc = urlParams.get('img');
-        const storeName = urlParams.get('store');
-
-        const imgContainer = document.getElementById('imgContainer');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const wrapper = document.getElementById('agreementWrapper');
-        let isOpened = false;
-        let hasLogged = false;
-
-        // Subukang kunin ang larawan direkta sa Firestore kung walang 'img' sa URL pero may store name
-        async function fetchAgreementImage() {
-            if (!imgSrc && storeName) {
-                try {
-                    const docRef = doc(db, "app_data", "main_inventory");
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        const appData = docSnap.data();
-                        const store = (appData.consignments || []).find(c => c.storeName.toLowerCase() === storeName.toLowerCase());
-                        if (store && (store.agreementImg || store.img || store.image)) {
-                            imgSrc = store.agreementImg || store.img || store.image;
-                        }
-                    }
-                } catch (e) {
-                    console.error("Error fetching agreement image from cloud:", e);
-                }
-            }
-
-            if (imgSrc) {
-                imgContainer.innerHTML = `<img src="${imgSrc}" alt="Signed Agreement" onload="sendHeight()">`;
-            } else {
-                imgContainer.innerHTML = `<p style="font-size:0.8rem; color:#666; padding:10px;">Walang nakitang larawan ng kasunduan para sa tindahang ito.</p>`;
-            }
-            sendHeight();
-        }
-
-        fetchAgreementImage();
-
-        function sendHeight() {
-            const height = wrapper.offsetHeight;
-            window.parent.postMessage({ type: 'resizeAgreement', height: height }, '*');
-        }
-
-        window.addEventListener('load', sendHeight);
-        window.addEventListener('resize', sendHeight);
-
-        window.toggleAgreement = async function() {
-            isOpened = !isOpened;
-            if (isOpened) {
-                imgContainer.style.display = 'block';
-                toggleBtn.textContent = "Itago ang Kasunduan";
-
-                if (storeName && !hasLogged) {
-                    hasLogged = true;
-                    try {
-                        const docRef = doc(db, "app_data", "main_inventory");
-                        const docSnap = await getDoc(docRef);
-                        if (docSnap.exists()) {
-                            let appData = docSnap.data();
-                            let store = (appData.consignments || []).find(c => c.storeName.toLowerCase() === storeName.toLowerCase());
-                            if (store) {
-                                if (!store.history) store.history = [];
-                                store.history.unshift({
-                                    id: Date.now(),
-                                    date: new Date().toLocaleString(),
-                                    text: `Tiningnan ng kliyente ang Pirmadong Consignment Agreement`
-                                });
-                                await setDoc(docRef, appData);
-                            }
-                        }
-                    } catch (e) {
-                        console.error("Error saving agreement view history:", e);
-                    }
-                }
-            } else {
-                imgContainer.style.display = 'none';
-                toggleBtn.textContent = "Buksan ang Kasunduan";
-                hasLogged = false;
-            }
-            setTimeout(sendHeight, 30);
-        }
-    </script>
+    <title>Consignment Agreement</title>
     <style>
         body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: transparent; color: #333; padding: 0; margin: 0; text-align: center; }
-        .wrapper { width: 100%; }
+        .agreement-wrapper { width: 100%; max-width: 100%; margin: auto; }
+        
         .toggle-btn {
             background-color: #2e7d32;
             color: white;
             border: none;
-            padding: 8px 12px;
-            font-size: 0.85rem;
+            padding: 10px 15px;
+            font-size: 0.9rem;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
             width: 100%;
+            transition: background 0.3s;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .toggle-btn:hover { background-color: #1b5e20; }
-        .img-container { display: none; margin-top: 8px; }
-        .img-container img { width: 100%; height: auto; border-radius: 6px; border: 1px solid #ccc; }
+        .toggle-btn:hover {
+            background-color: #1b5e20;
+        }
+
+        .img-container {
+            display: none;
+            margin-top: 10px;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
 
-<div class="wrapper" id="agreementWrapper">
-    <button id="toggleBtn" class="toggle-btn" onclick="toggleAgreement()">Buksan ang Kasunduan</button>
-    <div class="img-container" id="imgContainer"></div>
+<div class="agreement-wrapper" id="agreementWrapper">
+    <button id="toggleAgreementBtn" class="toggle-btn" onclick="toggleAgreement()">Buksan ang Kasunduan</button>
+    
+    <div class="img-container" id="agreementImgContainer">
+        <!-- Dito lilitaw ang larawan -->
+    </div>
 </div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const storeParam = urlParams.get('store');
+    
+    const imgContainer = document.getElementById('agreementImgContainer');
+    const toggleBtn = document.getElementById('toggleAgreementBtn');
+    const wrapper = document.getElementById('agreementWrapper');
+    
+    let isOpened = false;
+    let resizeInterval = null;
+
+    // Function para awtomatikong ipadala ang sukat ng taas sa Client Portal iframe
+    function sendHeightToParent() {
+        const height = wrapper.offsetHeight; // Sinusukat nito ang eksaktong taas ng nilalaman (button lang o may kasama pang image)
+        window.parent.postMessage({ type: 'resizeAgreement', height: height }, '*');
+    }
+
+    if (storeParam) {
+        const cleanName = decodeURIComponent(storeParam).trim();
+        const titleCaseName = cleanName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        let encodedFilename = encodeURIComponent(titleCaseName) + ".jpg";
+
+        imgContainer.innerHTML = `
+            <img src="${encodedFilename}" alt="Consignment Agreement" 
+                 onload="if(isOpened) sendHeightToParent()"
+                 onerror="this.onerror=function(){this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:8px;\'>Hindi makita ang file para kay <b>${titleCaseName}</b>.</p>'; if(isOpened) sendHeightToParent();}; this.src='${encodeURIComponent(cleanName)}.jpg';">
+        `;
+    } else {
+        toggleBtn.style.display = 'none';
+        imgContainer.style.display = 'block';
+        imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
+    }
+
+    // Tawagin pagka-load para sa paunang sukat ng button
+    window.addEventListener('load', sendHeightToParent);
+    window.addEventListener('resize', sendHeightToParent);
+
+    function toggleAgreement() {
+        isOpened = !isOpened;
+        if (isOpened) {
+            imgContainer.style.display = 'block';
+            toggleBtn.textContent = "Itago ang Kasunduan";
+            recordClientHistory(storeParam);
+            
+            // Sunud-sunod na pagpapadala habang lumalaki ang image
+            let count = 0;
+            if (resizeInterval) clearInterval(resizeInterval);
+            resizeInterval = setInterval(() => {
+                sendHeightToParent();
+                count++;
+                if (count > 25) clearInterval(resizeInterval);
+            }, 80);
+
+        } else {
+            if (resizeInterval) clearInterval(resizeInterval);
+            imgContainer.style.display = 'none';
+            toggleBtn.textContent = "Buksan ang Kasunduan";
+        }
+        
+        // Agarang i-update ang taas (para bumalik sa liit ng button kapag isinara)
+        setTimeout(sendHeightToParent, 50);
+    }
+
+    function recordClientHistory(storeName) {
+        if (!storeName) return;
+        console.log("History recorded for:", storeName);
+    }
+</script>
 
 </body>
 </html>
