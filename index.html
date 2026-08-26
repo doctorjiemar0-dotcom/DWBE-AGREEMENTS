@@ -3,148 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consignment Agreement</title>
+    <title>Doctor's Whisk Broom - Consignment Agreement</title>
     <style>
-        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: transparent; color: #333; padding: 0; margin: 0; text-align: center; }
-        .agreement-wrapper { width: 100%; max-width: 100%; margin: auto; }
-        
-        .toggle-btn {
-            background-color: #2e7d32;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .toggle-btn:hover {
-            background-color: #1b5e20;
-        }
-
-        .img-container {
-            display: none;
-            margin-top: 10px;
-            text-align: left;
-        }
-        .img-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-        .digital-box {
-            background: #ffffff;
-            border: 1px solid #c8e6c9;
-            border-radius: 6px;
-            padding: 12px;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-        .digital-box h3 {
-            color: #2e7d32;
-            margin-top: 0;
-            font-size: 0.95rem;
-            border-bottom: 2px solid #e8f5e9;
-            padding-bottom: 4px;
-        }
-        .digital-box ol { padding-left: 18px; margin: 8px 0; }
-        .digital-box li { margin-bottom: 6px; }
-        .store-highlight { color: #d32f2f; font-weight: bold; }
+        :root { --primary-color: #2e7d32; --secondary-color: #4caf50; --background-color: #f9f9f9; --text-color: #333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #ffffff; color: var(--text-color); padding: 15px; line-height: 1.5; font-size: 0.9rem; }
+        .agreement-container { max-width: 100%; margin: auto; background: #fff; padding: 10px; }
+        h1 { font-size: 1.1rem; color: var(--primary-color); text-align: center; margin-bottom: 10px; text-transform: uppercase; }
+        h2 { font-size: 0.95rem; color: var(--primary-color); margin-top: 12px; margin-bottom: 4px; border-bottom: 1px solid #eee; padding-bottom: 2px; }
+        p { margin-bottom: 8px; font-size: 0.85rem; text-align: justify; }
+        ul { margin-left: 18px; margin-bottom: 8px; font-size: 0.85rem; }
+        li { margin-bottom: 4px; }
+        .highlight-store { font-weight: bold; color: #1b5e20; background: #e8f5e9; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+        .footer-note { font-style: italic; font-size: 0.78rem; color: #666; margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="agreement-wrapper" id="agreementWrapper">
-    <button id="toggleAgreementBtn" class="toggle-btn" onclick="toggleAgreement()">Buksan ang Kasunduan</button>
-    
-    <div class="img-container" id="agreementImgContainer">
-        <!-- Dito kusang lalabas ang larawan o digital text -->
+    <div class="agreement-container" id="agreementBody">
+        <h1>Kasunduan sa Consignment ng Walis Tambo</h1>
+        <p style="text-align: center; font-size: 0.8rem; color: #555; margin-bottom: 12px;"><strong>Doctor's Whisk Broom Enterprises (DWBE)</strong></p>
+
+        <p>Ang kasunduang ito ay isinagawa at pinagtibay sa pagitan ng <strong>Doctor's Whisk Broom Enterprises</strong> (Tagapagtustos) at ng may-ari/kinatawan ng <span id="storeNameDisplay" class="highlight-store">Tindahan</span> (Consignee).</p>
+
+        <h2>1. Layunin at Kondisyon ng Produkto</h2>
+        <p>Ang Tagapagtustos ay nag-iwan ng mga de-kalidad na <strong>Walis Tambo</strong> sa tindahan para ibenta sa mga konsumer. Ang mga produktong ito ay mananatiling pag-aari ng Tagapagtustos hanggang sa ganap itong mabayaran o maibenta.</p>
+
+        <h2>2. Pagkakasundo sa Presyo at Komisyon</h2>
+        <ul>
+            <li>Ang bawat walis ay may nakatakdang kasunduang presyo sa pagitan ng DWBE at ng Tindahan.</li>
+            <li>Ang kabuuang halaga ng mga nabentang walis ay kolektahin sa napagkasunduang takdang petsa o panahon ng pagbisita ng Tagapagtustos.</li>
+            <li>Ang anumang natitirang hindi nabentang stock ay maaaring suriin, palitan, o bawiin ng Tagapagtustos kung kinakailangan.</li>
+        </ul>
+
+        <h2>3. Pananagutan ng Tindahan (Consignee)</h2>
+        <ul>
+            <li>Mangangasiwa ang tindahan sa maayos na pag-iimbak at pagpapakita (display) ng mga walis tambo upang hindi masira o madumihan.</li>
+            <li>Mananagot ang tindahan sa anumang pagkasira, pagkawala, o kapabayaan habang ang mga produkto ay nasa loob ng kanilang nasasakupan.</li>
+            <li>Ipagbibigay-alam kaagad sa Tagapagtustos kung ang mga paninda ay malapit nang maubos para sa kaukulang restock.</li>
+        </ul>
+
+        <h2>4. Pagpapatibay</h2>
+        <p>Sa pagpindot ng <strong>"Tanggapin ang Kasunduan"</strong> sa iyong Client Portal, pinapatunayan ng pamunuan ng tindahan na nauunawaan at sumasang-ayon sila sa mga patakarang ito na naglalayong mapaganda ang ating negosyo.</p>
+
+        <div class="footer-note">
+            — Doctor's Whisk Broom Enterprises Sorsogon —
+        </div>
     </div>
-</div>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const storeParam = urlParams.get('store');
-    
-    const imgContainer = document.getElementById('agreementImgContainer');
-    const toggleBtn = document.getElementById('toggleAgreementBtn');
-    const wrapper = document.getElementById('agreementWrapper');
-    
-    let isOpened = false;
-    let resizeInterval = null;
-
-    function sendHeightToParent() {
-        const height = wrapper.offsetHeight;
-        window.parent.postMessage({ type: 'resizeAgreement', height: height }, '*');
-    }
-
-    if (storeParam) {
-        const cleanName = decodeURIComponent(storeParam).trim();
-        const titleCaseName = cleanName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        let encodedFilename = encodeURIComponent(titleCaseName) + ".jpg";
-
-        // Sinusubukan munang i-load ang JPG file para sa mga lumang client
-        const img = new Image();
-        img.src = encodedFilename;
-        
-        img.onload = function() {
-            imgContainer.innerHTML = `<img src="${encodedFilename}" alt="Consignment Agreement">`;
-            if(isOpened) sendHeightToParent();
-        };
-
-        img.onerror = function() {
-            // Kung walang JPG file (para sa mga bagong client), awtomatikong magpapakita ng Digital Agreement text
-            imgContainer.innerHTML = `
-                <div class="digital-box">
-                    <h3>📜 Opisyal na Digital Consignment Agreement</h3>
-                    <p>Tindahan: <span class="store-highlight">${titleCaseName}</span></p>
-                    <ol>
-                        <li><strong>Pagmamay-ari ng Paninda:</strong> Ang lahat ng ipinadalang panindang walis tambo ay nananatiling eksklusibong pag-aari ng Admin hanggang sa ito ay tuluyang maibenta.</li>
-                        <li><strong>Pangangalaga sa Stock:</strong> Responsibilidad ng pamunuan ng tindahan na ingatan ang mga paninda mula sa anumang pinsala o pagkasira.</li>
-                        <li><strong>Pag-uulat at Remit:</strong> Ang pag-remit ng bayad at pag-uulat ng benta ay isasagawa sa itinakdang petsa ng koleksyon.</li>
-                        <li><strong>Patakaran sa Restock:</strong> Sa pag-request ng karagdagang restock, sumasang-ayon ka sa mga patakarang ito.</li>
-                    </ol>
-                </div>
-            `;
-            if(isOpened) sendHeightToParent();
-        };
-
-    } else {
-        toggleBtn.style.display = 'none';
-        imgContainer.style.display = 'block';
-        imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
-    }
-
-    window.addEventListener('load', sendHeightToParent);
-    window.addEventListener('resize', sendHeightToParent);
-
-    function toggleAgreement() {
-        isOpened = !isOpened;
-        if (isOpened) {
-            imgContainer.style.display = 'block';
-            toggleBtn.textContent = "Itago ang Kasunduan";
-            
-            let count = 0;
-            if (resizeInterval) clearInterval(resizeInterval);
-            resizeInterval = setInterval(() => {
-                sendHeightToParent();
-                count++;
-                if (count > 25) clearInterval(resizeInterval);
-            }, 80);
-
-        } else {
-            if (resizeInterval) clearInterval(resizeInterval);
-            imgContainer.style.display = 'none';
-            toggleBtn.textContent = "Buksan ang Kasunduan";
+    <script>
+        // Kunin ang pangalan ng tindahan mula sa URL parameter (?store=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const storeParam = urlParams.get('store');
+        if (storeParam) {
+            document.getElementById('storeNameDisplay').textContent = decodeURIComponent(storeParam);
         }
-        
-        setTimeout(sendHeightToParent, 50);
-    }
-</script>
 
+        // Awtomatikong ipadala ang sukat (height) sa parent client.html para walang scrollbar ang iframe
+        function sendHeight() {
+            const height = document.getElementById('agreementBody').scrollHeight + 30;
+            window.parent.postMessage({ type: 'resizeAgreement', height: height }, '*');
+        }
+
+        window.addEventListener('load', sendHeight);
+        window.addEventListener('resize', sendHeight);
+    </script>
 </body>
 </html>
