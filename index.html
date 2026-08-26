@@ -41,8 +41,8 @@
             border: 1px solid #c8e6c9;
             border-radius: 6px;
             padding: 12px;
-            font-size: 0.85rem;
-            line-height: 1.4;
+            font-size: 0.82rem;
+            line-height: 1.45;
         }
         .digital-box h3 {
             color: #2e7d32;
@@ -50,9 +50,10 @@
             font-size: 0.95rem;
             border-bottom: 2px solid #e8f5e9;
             padding-bottom: 4px;
+            text-align: center;
         }
         .digital-box ol { padding-left: 18px; margin: 8px 0; }
-        .digital-box li { margin-bottom: 6px; }
+        .digital-box li { margin-bottom: 8px; text-align: justify; }
         .store-highlight { color: #d32f2f; font-weight: bold; }
     </style>
 </head>
@@ -97,16 +98,19 @@
         };
 
         img.onerror = function() {
-            // Kung walang JPG file (para sa mga bagong client), awtomatikong magpapakita ng Digital Agreement text
+            // Kung walang JPG file, awtomatikong lalabas ang kumpletong orihinal na 6-point agreement
             imgContainer.innerHTML = `
                 <div class="digital-box">
                     <h3>📜 Opisyal na Digital Consignment Agreement</h3>
                     <p>Tindahan: <span class="store-highlight">${titleCaseName}</span></p>
+                    <p style="margin-bottom: 6px;"><strong>SA MGA KINAUUKULAN:</strong> Ang kasunduang ito ay nagtatakda ng mga pormal na alituntunin sa pagitan ng Owner at ng Store Partner:</p>
                     <ol>
-                        <li><strong>Pagmamay-ari ng Paninda:</strong> Ang lahat ng ipinadalang panindang walis tambo ay nananatiling eksklusibong pag-aari ng Admin hanggang sa ito ay tuluyang maibenta.</li>
-                        <li><strong>Pangangalaga sa Stock:</strong> Responsibilidad ng pamunuan ng tindahan na ingatan ang mga paninda mula sa anumang pinsala o pagkasira.</li>
-                        <li><strong>Pag-uulat at Remit:</strong> Ang pag-remit ng bayad at pag-uulat ng benta ay isasagawa sa itinakdang petsa ng koleksyon.</li>
-                        <li><strong>Patakaran sa Restock:</strong> Sa pag-request ng karagdagang restock, sumasang-ayon ka sa mga patakarang ito.</li>
+                        <li><strong>SISTEMA NG SUPPLY:</strong> Mag-iiwan ang Owner ng mga produktong Walis Tambo sa tindahan nang walang anumang advance na bayad o deposito. Ang pagbaba ng bagong supply ay nakadepende sa takbo ng benta at space ng tindahan.</li>
+                        <li><strong>SUPPLIER PRICE AT MARK-UP:</strong> Ang pinal na presyo ng bawat isang (1) piraso ng Walis Tambo mula sa Owner ay nakatakda bilang Supplier Price. Ang Store Partner ay may karapatang magtakda ng sarili nilang retail price o patong (mark-up) na magsisilbing direktang kita nila.</li>
+                        <li><strong>REMITTANCE (ONE MONTH TO PAY):</strong> Tuwing katapusan ng buwan, ire-remit o babayaran ng Store Partner ang kabuuang halaga ng mga yunit na aktwal na naibenta (Bilang ng Naibenta × Supplier Price). Ang mga hindi nabentang yunit ay mananatiling pag-aari ng Owner.</li>
+                        <li><strong>PHYSICAL INVENTORY AT RESTOCK:</strong> Obligasyon ng Owner o ng kanyang kinatawan na bumisita sa tindahan tuwing katapusan ng buwan upang magkasamang isagawa ang physical counting ng natirang stocks, kolektahin ang remittance, at magbaba ng dagdag na supply.</li>
+                        <li><strong>VALIDITY AT REPLENISHMENT (DALAWANG BUWAN):</strong> Ang kasunduang ito ay may pinal na bisa sa dalawang (2) buwan lamang. Ang Store Partner ang may buong pananagutan sa seguridad ng mga produkto; anumang nawala o nasira ay ituturing na benta.</li>
+                        <li><strong>PAGWAWAKAS NG KASUNDUAN:</strong> Kung nais tapusin ng alinmang panig bago lumipas ang dalawang buwan, gagawin ang pinal na kuwentahan: babayaran ng Store Partner ang lahat ng nabenta at ibabalik nang buo sa Owner ang natirang walang sirang stocks.</li>
                     </ol>
                 </div>
             `;
