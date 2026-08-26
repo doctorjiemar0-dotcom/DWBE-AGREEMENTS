@@ -28,6 +28,7 @@
         .img-container {
             display: none;
             margin-top: 10px;
+            text-align: left;
         }
         .img-container img {
             width: 100%;
@@ -35,6 +36,24 @@
             border-radius: 6px;
             border: 1px solid #ddd;
         }
+        .digital-box {
+            background: #ffffff;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .digital-box h3 {
+            color: #2e7d32;
+            margin-top: 0;
+            font-size: 0.95rem;
+            border-bottom: 2px solid #e8f5e9;
+            padding-bottom: 4px;
+        }
+        .digital-box ol { padding-left: 18px; margin: 8px 0; }
+        .digital-box li { margin-bottom: 6px; }
+        .store-highlight { color: #d32f2f; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -43,7 +62,7 @@
     <button id="toggleAgreementBtn" class="toggle-btn" onclick="toggleAgreement()">Buksan ang Kasunduan</button>
     
     <div class="img-container" id="agreementImgContainer">
-        <!-- Dito lilitaw ang larawan -->
+        <!-- Dito kusang lalabas ang larawan o digital text -->
     </div>
 </div>
 
@@ -58,9 +77,8 @@
     let isOpened = false;
     let resizeInterval = null;
 
-    // Function para awtomatikong ipadala ang sukat ng taas sa Client Portal iframe
     function sendHeightToParent() {
-        const height = wrapper.offsetHeight; // Sinusukat nito ang eksaktong taas ng nilalaman (button lang o may kasama pang image)
+        const height = wrapper.offsetHeight;
         window.parent.postMessage({ type: 'resizeAgreement', height: height }, '*');
     }
 
@@ -69,18 +87,38 @@
         const titleCaseName = cleanName.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         let encodedFilename = encodeURIComponent(titleCaseName) + ".jpg";
 
-        imgContainer.innerHTML = `
-            <img src="${encodedFilename}" alt="Consignment Agreement" 
-                 onload="if(isOpened) sendHeightToParent()"
-                 onerror="this.onerror=function(){this.parentElement.innerHTML='<p style=\'font-size:0.8rem; color:#d32f2f; padding:8px;\'>Hindi makita ang file para kay <b>${titleCaseName}</b>.</p>'; if(isOpened) sendHeightToParent();}; this.src='${encodeURIComponent(cleanName)}.jpg';">
-        `;
+        // Sinusubukan munang i-load ang JPG file para sa mga lumang client
+        const img = new Image();
+        img.src = encodedFilename;
+        
+        img.onload = function() {
+            imgContainer.innerHTML = `<img src="${encodedFilename}" alt="Consignment Agreement">`;
+            if(isOpened) sendHeightToParent();
+        };
+
+        img.onerror = function() {
+            // Kung walang JPG file (para sa mga bagong client), awtomatikong magpapakita ng Digital Agreement text
+            imgContainer.innerHTML = `
+                <div class="digital-box">
+                    <h3>📜 Opisyal na Digital Consignment Agreement</h3>
+                    <p>Tindahan: <span class="store-highlight">${titleCaseName}</span></p>
+                    <ol>
+                        <li><strong>Pagmamay-ari ng Paninda:</strong> Ang lahat ng ipinadalang panindang walis tambo ay nananatiling eksklusibong pag-aari ng Admin hanggang sa ito ay tuluyang maibenta.</li>
+                        <li><strong>Pangangalaga sa Stock:</strong> Responsibilidad ng pamunuan ng tindahan na ingatan ang mga paninda mula sa anumang pinsala o pagkasira.</li>
+                        <li><strong>Pag-uulat at Remit:</strong> Ang pag-remit ng bayad at pag-uulat ng benta ay isasagawa sa itinakdang petsa ng koleksyon.</li>
+                        <li><strong>Patakaran sa Restock:</strong> Sa pag-request ng karagdagang restock, sumasang-ayon ka sa mga patakarang ito.</li>
+                    </ol>
+                </div>
+            `;
+            if(isOpened) sendHeightToParent();
+        };
+
     } else {
         toggleBtn.style.display = 'none';
         imgContainer.style.display = 'block';
         imgContainer.innerHTML = `<p style="font-size: 0.85rem; color: #666;">Walang natukoy na tindahan sa link.</p>`;
     }
 
-    // Tawagin pagka-load para sa paunang sukat ng button
     window.addEventListener('load', sendHeightToParent);
     window.addEventListener('resize', sendHeightToParent);
 
@@ -89,9 +127,7 @@
         if (isOpened) {
             imgContainer.style.display = 'block';
             toggleBtn.textContent = "Itago ang Kasunduan";
-            recordClientHistory(storeParam);
             
-            // Sunud-sunod na pagpapadala habang lumalaki ang image
             let count = 0;
             if (resizeInterval) clearInterval(resizeInterval);
             resizeInterval = setInterval(() => {
@@ -106,13 +142,7 @@
             toggleBtn.textContent = "Buksan ang Kasunduan";
         }
         
-        // Agarang i-update ang taas (para bumalik sa liit ng button kapag isinara)
         setTimeout(sendHeightToParent, 50);
-    }
-
-    function recordClientHistory(storeName) {
-        if (!storeName) return;
-        console.log("History recorded for:", storeName);
     }
 </script>
 
